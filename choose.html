@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <meta charset="utf-8"> 
+        <title>选择支付方式</title> 
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+        <style type="text/css">  
+            hr{
+                height 1px;
+                border: none;
+                border-top: 1px dashed #0066CC;
+            }
+            body{
+                background: #f4f4f4;
+                margin: 0;
+            }
+            .font-general{
+                font-family: Helvetica, Tahoma, Arial, "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei";
+                font-size: .4rem;
+                color: #000000;
+            }
+            .pay-header-left{
+                text-align: left;
+            }
+            .pay-header{
+                padding: .37333rem .37333rem .37333rem .37333rem;
+                background: #FFFFFF;
+                height: 1rem;
+                line-height: 1rem;
+                border-bottom: 1px solid #d9d9d9;
+            }
+            .pay-header-right{
+                position: absolute;
+                padding-right: .37333rem;
+                right: .37333rem; 
+                color: #c12026;
+            }
+            .pay-content{
+                background: #FFFFFF;
+                padding: .37333rem .37333rem .37333rem .37333rem;
+            }
+            .pay-content-des{
+                font-size: .37333rem;
+            }
+            .pay-icon{
+                display: inline-block;
+                vertical-align: middle;
+                background-repeat: no-repeat;
+                background-size: .72rem .72rem;
+                width: .72rem;
+                height: .72rem;
+                margin-right: .3rem;
+            }
+            .pay-selected{
+                top: 3.1rem;
+            }
+            .pay-unselect{
+                top: 4.6rem;
+            }
+            .pay-icon-check{
+                position: absolute;
+                left: .32rem;
+            }
+            .pay-icon-wx{
+                background-image:url(wx.png);
+            }
+            .pay-icon-unselect{
+                background-image: url(unselect.png);
+            }
+            .pay-icon-selected{
+                background-image: url(select.png);
+            }
+            .pay-icon-zfb{
+                background-image:url(zfb.png);
+            }
+            .pay-content-inner{
+                align-items: center;
+                line-height: 1rem;
+                width: 100%;
+                vertical-align: middle;
+            }
+            .pay-content-li{
+                line-height: 1rem;
+                height: 1rem;
+                list-style-type: none;
+                align-items: center;
+                display: list-item;
+                filter: none;
+                text-align: left;
+                -webkit-box-align: center;
+            }
+            .pay-content-ul{
+                margin: 0;
+                padding-left: 1.2rem;
+            }
+            .pay-footer{
+                position: fixed;
+                display: block; 
+                line-height: 1rem;
+                height: 1rem;
+                width: 100%;
+                bottom: 0rem;
+                background-color: #c12026;
+                font-size: .37333rem;
+                color: #ffffff;
+                text-align: center;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var price = GetQueryString("price");
+                if(price){
+                    $("#price").text(GetQueryString("price"));
+                }
+                var flag = 'wx';
+                $('#wx-icon').addClass("pay-icon-selected");
+                $('#wx').click(function() {
+                    $('#wx-icon').addClass("pay-icon-selected");
+                    $('#zfb-icon').removeClass("pay-icon-selected");
+                    flag = 'wx';
+                });
+                $('#zfb').click(function() {
+                    $('#zfb-icon').addClass("pay-icon-selected");
+                    $('#wx-icon').removeClass("pay-icon-selected");
+                    flag = 'zfb';
+                });
+                $('#btn').click(function() {
+                     if (flag == 'wx') {
+                     }
+                     else{
+                     }
+                });
+            });
+            function onBridgeReady(){
+                WeixinJSBridge.invoke(
+                   'getBrandWCPayRequest', {
+                       "appId":GetQueryString("appId"),    
+                       "timeStamp":GetQueryString("timeStamp"),   
+                       "nonceStr":GetQueryString("nonceStr"),   
+                       "package":GetQueryString("package_pre"),     
+                       "signType":GetQueryString("signType"),    
+                       "paySign":GetQueryString("paySign") 
+                    },
+                    function(res){     
+                        if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                            alert("支付成功，确认返回首页...");
+                            window.location.href="http://www.makeiteasy.xin/";
+                        }
+                    }
+                );
+            }
+   			//if (typeof WeixinJSBridge == "undefined"){
+		    //    if( document.addEventListener ){
+		    //        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		    //    }else if (document.attachEvent){
+		    //        document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+		    //        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		    //    }
+		    // }
+            function GetQueryString(name)
+            {
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if(r!=null)return unescape(r[2]); return null;
+            }
+        </script>
+        <script type="text/javascript">
+            (function(win,doc){ change(); function change(){ doc.documentElement.style.fontSize = doc.documentElement.clientWidth / 10 + 'px'; } win.addEventListener('resize',change,false); win.addEventListener('orientationchange',change,false); })(window,document);
+        </script>
+    </head>
+    <body>
+        <div class="font-general">  
+            <div class="pay-header">  
+                <strong class="pay-header-left">支付金额</strong>  
+                <span class="pay-header-right">¥
+                    <strong id="price">
+                        计算ing..
+                    </strong>
+                </span>  
+            </div>
+            <div class="pay-content ">
+                <div class="pay-content-des ">
+                    <span>请选择支付方式</span>
+                    <hr>
+                    <div class="pay-content-selection">
+                        <div class="pay-content-ul">
+                            <div class="pay-content-li" id="wx">
+                                <div class="pay-content-inner">
+                                    <i class="pay-icon pay-selected pay-icon-unselect pay-icon-check" id="wx-icon"></i>
+                                    <i class="pay-icon pay-icon-wx"></i>
+                                    <span>微信支付</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="pay-content-li" id="zfb">
+                                <div class="pay-content-inner">
+                                    <i class="pay-icon pay-unselect pay-icon-unselect pay-icon-check" id="zfb-icon"></i>
+                                    <i class="pay-icon pay-icon-zfb"></i>
+                                    <span>支付宝</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pay-footer" id="btn" onclick="onBridgeReady()">
+                <span>确认支付</span>
+            </div>
+        </div>
+    </body>
+</html>
